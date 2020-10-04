@@ -49,8 +49,8 @@ class Directory extends React.Component {
     return (
       <div className="directory-menu">
         {/* We could have passed a normal parameter here but we destructure it like this to have exact values. */}
-        {this.state.sections.map(({ title, imageUrl, id, size }) => (
-          <MenuItem key={id} title={title} imageUrl={imageUrl} size={size} />
+        {this.state.sections.map(({ id, ...otherSectionProps }) => (
+          <MenuItem key={id} {...otherSectionProps} />
         ))}
       </div>
     );
