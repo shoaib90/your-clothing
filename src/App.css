@@ -8,3 +8,8 @@ a {
   color: black;
   box-sizing: border-box;
 }
+
+* {
+  box-sizing: border-box;
+}
+/* Above code means global selector */

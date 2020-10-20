@@ -26,7 +26,7 @@ class App extends React.Component {
     //manually have to fetch the user state every time, it will automatically fetch it, whenever the user do
     //something or some changes happens, and it is open as long as our app component is there on dom, but we don't
     // want any memory leaks when it's not, thus we will use unsubscribe.
-    auth.onAuthStateChanged((user) => {
+    this.unsubscribeFromAuth = auth.onAuthStateChanged((user) => {
       this.setState({ currentUser: user });
 
       console.log(user);
