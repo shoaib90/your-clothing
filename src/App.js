@@ -40,9 +40,6 @@ class App extends React.Component {
               id : snapShot.id,
               ...snapShot.data()
             }
-          }, () => {
-            // As this.setState is asynchronous, thus only way to console log is to pass a 2nd callable func.
-            console.log(this.state)
           }
           );
         });
