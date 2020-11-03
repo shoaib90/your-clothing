@@ -5,7 +5,7 @@ import HomePage from "./pages/homepage/homepage.component";
 import ShopPage from "./pages/shop/shop.component";
 import Header from "./components/header/header.component";
 import SignUpAndSignIn from "./pages/sign-in-and-sign-up/sign-in-and-sign-up.component";
-import { auth } from "./firebase/firbase.util";
+import { auth, createUserProfileDocument } from "./firebase/firbase.util";
 
 class App extends React.Component {
   constructor() {
@@ -26,10 +26,33 @@ class App extends React.Component {
     //manually have to fetch the user state every time, it will automatically fetch it, whenever the user do
     //something or some changes happens, and it is open as long as our app component is there on dom, but we don't
     // want any memory leaks when it's not, thus we will use unsubscribe.
-    this.unsubscribeFromAuth = auth.onAuthStateChanged((user) => {
-      this.setState({ currentUser: user });
+    this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+      if (userAuth){
+        //We want this userRef object because we need it to check whether the database is updated at that reference
+        // with any new data, very similar to our onAuthStateChanged, we are kind of saying if teh snapshot is changed.
+        // But chances are it is never going to happen, because we are never going to update the user inside our code
+        // but onSnapshot() will still give us back the data object 
+        const userRef = await createUserProfileDocument(userAuth);
 
-      console.log(user);
+        userRef.onSnapshot(snapShot => {
+          this.setState({
+            currentUser : {
+              id : snapShot.id,
+              ...snapShot.data()
+            }
+          }, () => {
+            // As this.setState is asynchronous, thus only way to console log is to pass a 2nd callable func.
+            console.log(this.state)
+          }
+          );
+        });
+      }
+      else{
+        //This becuase our app should also be aware of when the user logs out, so this pass null to cuurentUser state.
+        // above snapShot.data() :- creating a new obejct there, as it returns the obj.
+        this.setState({currentUser: userAuth});
+      }
+      
     });
   }
 
