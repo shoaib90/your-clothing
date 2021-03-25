@@ -58,3 +58,5 @@ export const signInWithGoogle = () => auth.signInWithPopup(provider); //There ar
 export default firebase; //In case if we want to use the whole library.
 
 //All this code is related to configuring, in this case authentication on the app.
+
+
